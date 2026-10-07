@@ -141,7 +141,7 @@ assumed = property do
               pure (defMessage & #outcome .~ P.OUTCOME_ACCEPTED)
           , requestErasure = \_ _ -> pure (defMessage & #outcome .~ P.OUTCOME_ACCEPTED)
           }
-      settings = Rpc.defaultSettings{Rpc.port = 0, Rpc.onListening = putMVar bound, Rpc.report = const (pure ())}
+      settings = Rpc.defaultSettings{Rpc.port = 0, Rpc.onListening = putMVar bound, Rpc.calls = Rpc.defaultCalls{Rpc.report = const (pure ())}}
   (requests, grants) <- liftIO $ withAsync (Rpc.serveEndpoints settings [Rpc.endpoint server]) \_ -> do
     port <- takeMVar bound
     let config =

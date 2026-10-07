@@ -58,11 +58,15 @@ run path = do
           Rpc.defaultSettings
             { Rpc.host = loaded.config.listen.host
             , Rpc.port = loaded.config.listen.port
-            , Rpc.web = Rpc.defaultWeb{Rpc.cors = Just (corsOf loaded.config.listen.corsOrigins), Rpc.receiveLimit = Just (4 * 1024 * 1024)}
             , Rpc.onListening = journal.write "listening" . toJSON
-            , Rpc.report = journal.write "request-failed" . toJSON . show
             , Rpc.tls = tls
-            , Rpc.interceptor = jsonOnlyForManage <> observing "peculiar.insights.v1.Ingest" metrics
+            , Rpc.calls =
+                Rpc.defaultCalls
+                  { Rpc.cors = Just (corsOf loaded.config.listen.corsOrigins)
+                  , Rpc.receiveLimit = Just (4 * 1024 * 1024)
+                  , Rpc.report = journal.write "request-failed" . toJSON . show
+                  , Rpc.interceptor = jsonOnlyForManage <> observing "peculiar.insights.v1.Ingest" metrics
+                  }
             }
         serving = Rpc.serveEndpoints settings [Rpc.endpoint (ingest startup.env), Rpc.endpoint (manage startup.env), Rpc.endpoint (symbols startup.env), Rpc.health statuses]
     withAsync (maintenance startup) \_ -> case loaded.config.monitoring of

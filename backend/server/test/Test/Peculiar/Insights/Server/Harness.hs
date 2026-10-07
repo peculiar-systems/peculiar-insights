@@ -88,8 +88,11 @@ withServing db Serving{grafana, symbolicator, uploads, keyRate, peerLimit} use =
         Rpc.defaultSettings
           { Rpc.port = 0
           , Rpc.onListening = putMVar bound
-          , Rpc.report = const (pure ())
-          , Rpc.interceptor = jsonOnlyForManage <> observing "peculiar.insights.v1.Ingest" metrics
+          , Rpc.calls =
+              Rpc.defaultCalls
+                { Rpc.report = const (pure ())
+                , Rpc.interceptor = jsonOnlyForManage <> observing "peculiar.insights.v1.Ingest" metrics
+                }
           }
   withAsync (Rpc.serveEndpoints settings [Rpc.endpoint (ingest env), Rpc.endpoint (manage env), Rpc.endpoint (symbols env), Rpc.health statuses]) \_ -> takeMVar bound >>= (`use` metrics.exposition)
 

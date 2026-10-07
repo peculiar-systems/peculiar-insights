@@ -95,7 +95,7 @@ serving decide use = do
           , recordConsent = \_ _ -> pure (defMessage & #outcome .~ P.OUTCOME_ACCEPTED)
           , requestErasure = \_ _ -> pure (defMessage & #outcome .~ P.OUTCOME_ACCEPTED)
           }
-      settings = Rpc.defaultSettings{Rpc.port = 0, Rpc.onListening = putMVar bound, Rpc.report = const (pure ())}
+      settings = Rpc.defaultSettings{Rpc.port = 0, Rpc.onListening = putMVar bound, Rpc.calls = Rpc.defaultCalls{Rpc.report = const (pure ())}}
   withAsync (Rpc.serveEndpoints settings [Rpc.endpoint server]) \_ -> takeMVar bound >>= use
 
 sent :: P.PublishRequest -> [(T.Text, T.Text, Integer)]
