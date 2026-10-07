@@ -2,13 +2,13 @@ import * as s from "./landing.css.ts";
 
 const boxes = [
   { x: 20, label: "SDKs", sub: "Flutter · TS · Haskell" },
-  { x: 240, label: "Ingest server", sub: "Haskell · gRPC, gRPC-Web, Connect" },
+  { x: 240, label: "Ingest server", sub: "gRPC · gRPC-Web · Connect" },
   { x: 460, label: "PostgreSQL", sub: "partitioned, reporting schema" },
   { x: 680, label: "Grafana", sub: "dashboards · alerts" },
 ] as const;
 
 export const Diagram = () => (
-  <div class={s.diagram}>
+  <div class={s.diagram} tabIndex={0} role="region" aria-labelledby="diagram-title">
     <svg class={s.diagramSvg} viewBox="0 0 880 150" role="img" aria-labelledby="diagram-title">
       <title id="diagram-title">
         SDKs send consented batches to the ingest server, which stores them in PostgreSQL, which
@@ -63,7 +63,7 @@ export const Diagram = () => (
           ) : null}
         </g>
       ))}
-      <text x={200} y={132} text-anchor="middle" font-size="11.5" fill="oklch(0.55 0.012 270)">
+      <text x={220} y={132} text-anchor="middle" font-size="11.5" fill="oklch(0.55 0.012 270)">
         consent snapshot on every batch
       </text>
       <text x={440} y={132} text-anchor="middle" font-size="11.5" fill="oklch(0.55 0.012 270)">

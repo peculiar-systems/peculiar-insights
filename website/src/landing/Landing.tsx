@@ -263,13 +263,13 @@ export const Landing = () => (
         <div class={s.codeGrid}>
           <div class={s.codeBlock}>
             <h3 class={s.codeTitle}>Flutter</h3>
-            <pre class={s.pre}>
+            <pre class={s.pre} tabIndex={0}>
               <code>{flutterSample}</code>
             </pre>
           </div>
           <div class={s.codeBlock}>
             <h3 class={s.codeTitle}>Haskell</h3>
-            <pre class={s.pre}>
+            <pre class={s.pre} tabIndex={0}>
               <code>{haskellSample}</code>
             </pre>
           </div>

@@ -20,7 +20,7 @@ export const Header = () => (
           Why
         </a>
         <a class={s.navLink} href="/privacy">
-          Privacy
+          Data & consent
         </a>
         <a class={s.navLink} href="/architecture">
           Architecture
@@ -46,7 +46,7 @@ export const Footer = () => (
         </a>
         {" · "}
         <a class={s.footerLink} href="/privacy">
-          Privacy
+          Data & consent
         </a>
         {" · "}
         <a class={s.footerLink} href="/architecture">
@@ -59,6 +59,20 @@ export const Footer = () => (
         {" · "}
         <a class={s.footerLink} href="https://github.com/peculiar-systems/peculiar-insights">
           Source
+        </a>
+      </span>
+      <span>
+        A peculiar product ·{" "}
+        <a class={s.footerLink} href="https://peculiar.systems/privacy">
+          Privacy
+        </a>
+        {" · "}
+        <a class={s.footerLink} href="https://peculiar.systems/terms">
+          Terms
+        </a>
+        {" · "}
+        <a class={s.footerLink} href="https://peculiar.systems/refunds">
+          Refunds
         </a>
         {" · "}
         <a class={s.footerLink} href="https://peculiar.systems">
