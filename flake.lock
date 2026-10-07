@@ -24,17 +24,17 @@
     "contract-main": {
       "flake": false,
       "locked": {
-        "lastModified": 1790870149,
-        "narHash": "sha256-dHgfqvDfQHAosgoS5KHQ+2AZuEvMCRmnyxZCniOhzn0=",
+        "lastModified": 1791395984,
+        "narHash": "sha256-99MGhc1gPNzaGovn08V0Ivsmkrm92GEKaRjMz+8jGFA=",
         "owner": "peculiar-systems",
-        "repo": "insights-private",
-        "rev": "165b68d986012921512e4ffcfc4b7ae4c89efe62",
+        "repo": "peculiar-insights",
+        "rev": "bd0bb8fa184a88e60e9d6b9e7709bf7e0594899c",
         "type": "github"
       },
       "original": {
         "owner": "peculiar-systems",
         "ref": "main",
-        "repo": "insights-private",
+        "repo": "peculiar-insights",
         "type": "github"
       }
     },
@@ -146,17 +146,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1790880100,
-        "narHash": "sha256-qsjE3Q/YsY7GkgxD+gNzWL/IR3UOpVVU7TWS6MaPzDg=",
-        "ref": "refs/heads/certified",
-        "rev": "2733fb0570262c1e262753bae6db02ce4152af42",
-        "revCount": 48,
-        "type": "git",
-        "url": "ssh://git@github.com/peculiar-systems/rpc-private"
+        "lastModified": 1791395984,
+        "narHash": "sha256-eFWnyHgAKDSJE96+NGhw4nesuZscC64TLcngPBT3pAA=",
+        "owner": "peculiar-systems",
+        "repo": "peculiar-rpc",
+        "rev": "ab0e146feb47e1c862fb72302926262da46a3698",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/peculiar-systems/rpc-private"
+        "owner": "peculiar-systems",
+        "repo": "peculiar-rpc",
+        "type": "github"
       }
     },
     "root": {
