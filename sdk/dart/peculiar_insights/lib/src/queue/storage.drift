@@ -1,0 +1,30 @@
+CREATE TABLE queue_item (
+  id TEXT NOT NULL PRIMARY KEY,
+  kind TEXT NOT NULL,
+  purpose TEXT NOT NULL,
+  payload BLOB NOT NULL,
+  created_at INTEGER NOT NULL,
+  consent BLOB
+);
+
+CREATE INDEX queue_item_order ON queue_item (created_at);
+
+CREATE TABLE state_entry (
+  name TEXT NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+peekRows: SELECT * FROM queue_item ORDER BY created_at, rowid LIMIT :limit;
+
+removeRows: DELETE FROM queue_item WHERE id IN ?;
+
+removePurposeRows: DELETE FROM queue_item WHERE purpose = :purpose;
+
+clearRows: DELETE FROM queue_item;
+
+readEntry: SELECT value FROM state_entry WHERE name = :key;
+
+writeEntry: INSERT INTO state_entry (name, value) VALUES (:key, :value)
+  ON CONFLICT (name) DO UPDATE SET value = excluded.value;
+
+deleteEntry: DELETE FROM state_entry WHERE name = :key;

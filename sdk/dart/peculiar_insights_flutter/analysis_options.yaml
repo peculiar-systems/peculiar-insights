@@ -1,0 +1,5 @@
+include: package:ai_dart_linter/ai_dart_linter.yaml
+
+analyzer:
+  errors:
+    included_file_warning: ignore

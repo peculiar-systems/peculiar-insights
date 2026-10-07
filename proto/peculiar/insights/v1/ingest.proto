@@ -1,0 +1,223 @@
+syntax = "proto3";
+
+package peculiar.insights.v1;
+
+import "google/protobuf/timestamp.proto";
+import "peculiar/insights/v1/common.proto";
+import "peculiar/insights/v1/options.proto";
+
+service Ingest {
+  rpc Publish(PublishRequest) returns (PublishResponse);
+  rpc RecordConsent(RecordConsentRequest) returns (RecordConsentResponse);
+  rpc RequestErasure(RequestErasureRequest) returns (RequestErasureResponse);
+}
+
+message PublishRequest {
+  google.protobuf.Timestamp sent_at = 1;
+  ConsentSnapshot consent = 2;
+  repeated Item items = 3;
+}
+
+message Item {
+  oneof kind {
+    Event event = 1;
+    Identify identify = 2;
+    ProfileUpdate profile_update = 3;
+    CrashReport crash_report = 4;
+  }
+}
+
+message Subject {
+  string device_id = 1 [(category) = DATA_CATEGORY_DEVICE_ID];
+  optional string user_id = 2 [(category) = DATA_CATEGORY_USER_ID];
+  string session_id = 3 [(category) = DATA_CATEGORY_DEVICE_ID];
+}
+
+message Event {
+  string id = 1 [(category) = DATA_CATEGORY_NONE];
+  google.protobuf.Timestamp time = 2 [
+    (category) = DATA_CATEGORY_PRODUCT_INTERACTION,
+    (purpose) = PURPOSE_ANALYTICS
+  ];
+  Subject subject = 3 [(purpose) = PURPOSE_ANALYTICS];
+  Context context = 4 [(purpose) = PURPOSE_ANALYTICS];
+  string name = 5 [
+    (category) = DATA_CATEGORY_PRODUCT_INTERACTION,
+    (purpose) = PURPOSE_ANALYTICS
+  ];
+  map<string, Value> properties = 6 [
+    (category) = DATA_CATEGORY_USER_CONTENT,
+    (purpose) = PURPOSE_ANALYTICS
+  ];
+}
+
+message Identify {
+  string id = 1 [(category) = DATA_CATEGORY_NONE];
+  google.protobuf.Timestamp time = 2 [(category) = DATA_CATEGORY_NONE];
+  string device_id = 3 [
+    (category) = DATA_CATEGORY_DEVICE_ID,
+    (purpose) = PURPOSE_ANALYTICS
+  ];
+  string user_id = 4 [
+    (category) = DATA_CATEGORY_USER_ID,
+    (purpose) = PURPOSE_ANALYTICS
+  ];
+}
+
+message ProfileUpdate {
+  string id = 1 [(category) = DATA_CATEGORY_NONE];
+  google.protobuf.Timestamp time = 2 [(category) = DATA_CATEGORY_NONE];
+  string device_id = 3 [
+    (category) = DATA_CATEGORY_DEVICE_ID,
+    (purpose) = PURPOSE_ANALYTICS
+  ];
+  string user_id = 4 [
+    (category) = DATA_CATEGORY_USER_ID,
+    (purpose) = PURPOSE_ANALYTICS
+  ];
+  repeated ProfileOperation operations = 5 [
+    (category) = DATA_CATEGORY_USER_CONTENT,
+    (purpose) = PURPOSE_ANALYTICS
+  ];
+}
+
+message ProfileOperation {
+  string key = 1;
+  oneof kind {
+    Value set = 2;
+    Value set_once = 3;
+    Unset unset = 4;
+    double increment = 5;
+  }
+}
+
+message Unset {}
+
+message CrashReport {
+  string id = 1 [(category) = DATA_CATEGORY_NONE];
+  google.protobuf.Timestamp time = 2 [
+    (category) = DATA_CATEGORY_CRASH_DATA,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+  Subject subject = 3 [(purpose) = PURPOSE_DIAGNOSTICS];
+  Context context = 4 [(purpose) = PURPOSE_DIAGNOSTICS];
+  string exception_type = 5 [
+    (category) = DATA_CATEGORY_CRASH_DATA,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+  string message = 6 [
+    (category) = DATA_CATEGORY_CRASH_DATA,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+  repeated Frame frames = 7 [
+    (category) = DATA_CATEGORY_CRASH_DATA,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+  string raw_stack_trace = 8 [
+    (category) = DATA_CATEGORY_CRASH_DATA,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+  bool fatal = 9 [
+    (category) = DATA_CATEGORY_CRASH_DATA,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+  string thread = 10 [
+    (category) = DATA_CATEGORY_CRASH_DATA,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+  map<string, Value> custom_keys = 11 [
+    (category) = DATA_CATEGORY_USER_CONTENT,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+  repeated LogLine logs = 12 [
+    (category) = DATA_CATEGORY_OTHER_DIAGNOSTIC,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+}
+
+message Frame {
+  string module = 1;
+  string function = 2;
+  string file = 3;
+  uint32 line = 4;
+  uint32 column = 5;
+  bool in_app = 6;
+  optional uint64 instruction_address = 7 [
+    (category) = DATA_CATEGORY_CRASH_DATA,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+  Image image = 8 [
+    (category) = DATA_CATEGORY_CRASH_DATA,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+}
+
+message Image {
+  string name = 1 [
+    (category) = DATA_CATEGORY_CRASH_DATA,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+  string identifier = 2 [
+    (category) = DATA_CATEGORY_CRASH_DATA,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+  uint64 load_address = 3 [
+    (category) = DATA_CATEGORY_CRASH_DATA,
+    (purpose) = PURPOSE_DIAGNOSTICS
+  ];
+}
+
+enum LogLevel {
+  LOG_LEVEL_UNSPECIFIED = 0;
+  LOG_LEVEL_DEBUG = 1;
+  LOG_LEVEL_INFO = 2;
+  LOG_LEVEL_WARNING = 3;
+  LOG_LEVEL_ERROR = 4;
+}
+
+message LogLine {
+  google.protobuf.Timestamp time = 1;
+  LogLevel level = 2;
+  string message = 3;
+}
+
+enum Outcome {
+  OUTCOME_UNSPECIFIED = 0;
+  OUTCOME_ACCEPTED = 1;
+  OUTCOME_DUPLICATE = 2;
+  OUTCOME_INVALID = 3;
+  OUTCOME_NOT_CONSENTED = 4;
+}
+
+message ItemOutcome {
+  string id = 1;
+  Outcome outcome = 2;
+  string reason = 3;
+}
+
+message PublishResponse {
+  repeated ItemOutcome outcomes = 1;
+}
+
+message RecordConsentRequest {
+  string id = 1 [(category) = DATA_CATEGORY_NONE];
+  google.protobuf.Timestamp time = 2 [(category) = DATA_CATEGORY_NONE];
+  string device_id = 3 [(category) = DATA_CATEGORY_DEVICE_ID];
+  optional string user_id = 4 [(category) = DATA_CATEGORY_USER_ID];
+  PurposeState purpose = 5 [(category) = DATA_CATEGORY_NONE];
+}
+
+message RecordConsentResponse {
+  Outcome outcome = 1;
+}
+
+message RequestErasureRequest {
+  string id = 1 [(category) = DATA_CATEGORY_NONE];
+  google.protobuf.Timestamp time = 2 [(category) = DATA_CATEGORY_NONE];
+  string device_id = 3 [(category) = DATA_CATEGORY_DEVICE_ID];
+  optional string user_id = 4 [(category) = DATA_CATEGORY_USER_ID];
+}
+
+message RequestErasureResponse {
+  Outcome outcome = 1;
+}

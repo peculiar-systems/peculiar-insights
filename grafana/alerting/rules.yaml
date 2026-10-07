@@ -1,0 +1,165 @@
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: peculiar-insights
+    folder: Peculiar Insights
+    interval: 5m
+    rules:
+      - uid: peculiar-insights-new-issue
+        title: New crash issue
+        condition: C
+        for: 0m
+        noDataState: OK
+        execErrState: Error
+        labels:
+          severity: warning
+          source: peculiar-insights
+        annotations:
+          summary: A crash issue first seen in the last 15 minutes in {{ $labels.label }}
+          description: The crashes overview dashboard lists it under open issues.
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 900
+              to: 0
+            datasourceUid: peculiar-insights
+            model:
+              refId: A
+              editorMode: code
+              format: table
+              rawQuery: true
+              rawSql: >-
+                SELECT project || '/' || environment AS label, count(*) AS value
+                FROM reporting.issue
+                WHERE first_seen > now() - interval '15 minutes' AND NOT regrouped
+                GROUP BY 1
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              refId: C
+              type: threshold
+              expression: A
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [0]
+
+      - uid: peculiar-insights-regression
+        title: Crash issue regressed
+        condition: C
+        for: 0m
+        noDataState: OK
+        execErrState: Error
+        labels:
+          severity: critical
+          source: peculiar-insights
+        annotations:
+          summary: A resolved crash issue reappeared on a newer build in {{ $labels.label }}
+          description: The issue was reopened and marked regressed; the crashes overview dashboard shows the regressed_at time.
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 900
+              to: 0
+            datasourceUid: peculiar-insights
+            model:
+              refId: A
+              editorMode: code
+              format: table
+              rawQuery: true
+              rawSql: >-
+                SELECT project || '/' || environment AS label, count(*) AS value
+                FROM reporting.issue
+                WHERE regressed_at > now() - interval '15 minutes'
+                GROUP BY 1
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              refId: C
+              type: threshold
+              expression: A
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [0]
+
+      - uid: peculiar-insights-crash-free-rate
+        title: Crash-free sessions below 95 percent
+        condition: C
+        for: 10m
+        noDataState: OK
+        execErrState: Error
+        labels:
+          severity: critical
+          source: peculiar-insights
+        annotations:
+          summary: Crash-free sessions over the last hour fell to {{ $values.A }} percent in {{ $labels.label }}
+          description: Evaluated only once at least 20 sessions started in the hour.
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 3600
+              to: 0
+            datasourceUid: peculiar-insights
+            model:
+              refId: A
+              editorMode: code
+              format: table
+              rawQuery: true
+              rawSql: >-
+                SELECT project || '/' || environment AS label,
+                       round(100.0 * count(*) FILTER (WHERE NOT crashed) / count(*), 2) AS value
+                FROM reporting.session
+                WHERE started_at > now() - interval '1 hour'
+                GROUP BY 1
+                HAVING count(*) >= 20
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              refId: C
+              type: threshold
+              expression: A
+              conditions:
+                - evaluator:
+                    type: lt
+                    params: [95]
+
+      - uid: peculiar-insights-ingest-silence
+        title: Ingest silence
+        condition: C
+        for: 0m
+        noDataState: OK
+        execErrState: Error
+        labels:
+          severity: warning
+          source: peculiar-insights
+        annotations:
+          summary: No events arrived for {{ $labels.label }} in the last 30 minutes
+          description: The environment had events in the previous 24 hours, so the SDKs or the server may have stopped.
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: peculiar-insights
+            model:
+              refId: A
+              editorMode: code
+              format: table
+              rawQuery: true
+              rawSql: >-
+                SELECT project || '/' || environment AS label,
+                       count(*) FILTER (WHERE received_at > now() - interval '30 minutes') AS value
+                FROM reporting.event
+                WHERE received_at > now() - interval '24 hours'
+                GROUP BY 1
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              refId: C
+              type: threshold
+              expression: A
+              conditions:
+                - evaluator:
+                    type: lt
+                    params: [1]

@@ -1,0 +1,1008 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "description": "Trend and breakdown of chosen events, filtered by platform, app version and cohort.",
+  "editable": true,
+  "graphTooltip": 1,
+  "links": [
+    {
+      "asDropdown": true,
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "peculiar-insights"
+      ],
+      "title": "Peculiar Insights",
+      "type": "dashboards"
+    }
+  ],
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT count(*) AS events FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time)",
+          "refId": "A"
+        }
+      ],
+      "title": "Events",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT count(DISTINCT COALESCE(user_id, 'd:' || device_id)) AS users FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time)",
+          "refId": "A"
+        }
+      ],
+      "title": "Unique users",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT round(count(*)::numeric / NULLIF(count(DISTINCT COALESCE(user_id, 'd:' || device_id)), 0), 2) AS per_user FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time)",
+          "refId": "A"
+        }
+      ],
+      "title": "Events per user",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT count(DISTINCT session_id) AS sessions FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time)",
+          "refId": "A"
+        }
+      ],
+      "title": "Sessions with the event",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisSoftMin": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "lineWidth": 2,
+            "pointSize": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            }
+          },
+          "min": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "events"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#2a78d6",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT $__timeGroupAlias(time, $__interval), count(*) AS events FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time) GROUP BY 1 ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Events over time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisSoftMin": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "lineWidth": 2,
+            "pointSize": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            }
+          },
+          "min": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "users"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#eb6834",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT $__timeGroupAlias(time, $__interval), count(DISTINCT COALESCE(user_id, 'd:' || device_id)) AS users FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time) GROUP BY 1 ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Unique users over time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisSoftMin": 0,
+            "drawStyle": "line",
+            "fillOpacity": 40,
+            "gradientMode": "none",
+            "lineWidth": 2,
+            "pointSize": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            }
+          },
+          "min": 0
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT $__timeGroupAlias(time, $__interval), COALESCE(properties ->> '${property}', '(missing)') AS metric, count(*) AS value FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time) AND COALESCE(properties ->> '${property}', '(missing)') IN (SELECT COALESCE(properties ->> '${property}', '(missing)') AS v FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time) GROUP BY 1 ORDER BY count(*) DESC LIMIT 8) GROUP BY 1, 2 ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Breakdown by ${property} (top 8 values)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisSoftMin": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "lineWidth": 2,
+            "pointSize": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            }
+          },
+          "min": 0
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT $__timeGroupAlias(time, $__interval), name AS metric, count(*) AS value FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time) AND name IN (SELECT name FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time) GROUP BY 1 ORDER BY count(*) DESC LIMIT 8) GROUP BY 1, 2 ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "By event",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisSoftMin": 0,
+            "drawStyle": "line",
+            "fillOpacity": 40,
+            "gradientMode": "none",
+            "lineWidth": 2,
+            "pointSize": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            }
+          },
+          "min": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ios"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#2a78d6",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "android"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#eb6834",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "web"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#1baf7a",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "macos"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#eda100",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "windows"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#e87ba4",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "linux"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#4a3aa7",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "server"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#008300",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "unknown"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8a8a86",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 21
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT $__timeGroupAlias(time, $__interval), platform AS metric, count(*) AS value FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time) GROUP BY 1, 2 ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "By platform",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 29
+      },
+      "id": 10,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COALESCE(properties ->> '${property}', '(missing)') AS value, count(*) AS events, count(DISTINCT COALESCE(user_id, 'd:' || device_id)) AS users FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time) GROUP BY 1 ORDER BY 2 DESC LIMIT 50",
+          "refId": "A"
+        }
+      ],
+      "title": "Values of ${property}",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 29
+      },
+      "id": 11,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT app_version, platform, count(*) AS events, count(DISTINCT COALESCE(user_id, 'd:' || device_id)) AS users FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND platform IN (${platform:sqlstring}) AND app_version IN (${app_version:sqlstring}) AND ${cohort:raw} AND $__timeFilter(time) GROUP BY 1, 2 ORDER BY 3 DESC LIMIT 50",
+          "refId": "A"
+        }
+      ],
+      "title": "By app version",
+      "type": "table"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [
+    "peculiar-insights"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "peculiar-insights"
+        },
+        "definition": "SELECT DISTINCT project FROM reporting.device ORDER BY 1",
+        "description": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Project",
+        "multi": false,
+        "name": "project",
+        "options": [],
+        "query": "SELECT DISTINCT project FROM reporting.device ORDER BY 1",
+        "refresh": 2,
+        "regex": "",
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "peculiar-insights"
+        },
+        "definition": "SELECT DISTINCT environment FROM reporting.device WHERE project = '${project}' ORDER BY 1",
+        "description": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Environment",
+        "multi": false,
+        "name": "environment",
+        "options": [],
+        "query": "SELECT DISTINCT environment FROM reporting.device WHERE project = '${project}' ORDER BY 1",
+        "refresh": 2,
+        "regex": "",
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "peculiar-insights"
+        },
+        "definition": "SELECT DISTINCT name FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' ORDER BY 1",
+        "description": "",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Event",
+        "multi": true,
+        "name": "event",
+        "options": [],
+        "query": "SELECT DISTINCT name FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' ORDER BY 1",
+        "refresh": 2,
+        "regex": "",
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "peculiar-insights"
+        },
+        "definition": "SELECT DISTINCT platform FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' ORDER BY 1",
+        "description": "",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Platform",
+        "multi": true,
+        "name": "platform",
+        "options": [],
+        "query": "SELECT DISTINCT platform FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' ORDER BY 1",
+        "refresh": 2,
+        "regex": "",
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "peculiar-insights"
+        },
+        "definition": "SELECT DISTINCT app_version FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' ORDER BY 1 DESC",
+        "description": "",
+        "hide": 0,
+        "includeAll": true,
+        "label": "App version",
+        "multi": true,
+        "name": "app_version",
+        "options": [],
+        "query": "SELECT DISTINCT app_version FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' ORDER BY 1 DESC",
+        "refresh": 2,
+        "regex": "",
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "peculiar-insights"
+        },
+        "definition": "SELECT DISTINCT key FROM reporting.event, jsonb_object_keys(properties) AS key WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND time > now() - interval '30 days' ORDER BY 1 LIMIT 200",
+        "description": "A property key of the selected events; the breakdown panel splits by its value",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Breakdown property",
+        "multi": false,
+        "name": "property",
+        "options": [],
+        "query": "SELECT DISTINCT key FROM reporting.event, jsonb_object_keys(properties) AS key WHERE project = '${project}' AND environment = '${environment}' AND name IN (${event:sqlstring}) AND time > now() - interval '30 days' ORDER BY 1 LIMIT 200",
+        "refresh": 2,
+        "regex": "",
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "peculiar-insights"
+        },
+        "definition": "SELECT 'everyone' AS __text, 'TRUE' AS __value UNION ALL SELECT substring(table_name FROM length('cohort_${project}_${environment}_') + 1) AS __text, 'person_id IN (SELECT person_id FROM reporting.' || table_name || ')' AS __value FROM information_schema.views WHERE table_schema = 'reporting' AND table_name LIKE replace('cohort_${project}_${environment}_%', '_', '\\_') ESCAPE '\\' ORDER BY 1",
+        "description": "A cohort declared in the server configuration, or everyone",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Cohort",
+        "multi": false,
+        "name": "cohort",
+        "options": [],
+        "query": "SELECT 'everyone' AS __text, 'TRUE' AS __value UNION ALL SELECT substring(table_name FROM length('cohort_${project}_${environment}_') + 1) AS __text, 'person_id IN (SELECT person_id FROM reporting.' || table_name || ')' AS __value FROM information_schema.views WHERE table_schema = 'reporting' AND table_name LIKE replace('cohort_${project}_${environment}_%', '_', '\\_') ESCAPE '\\' ORDER BY 1",
+        "refresh": 2,
+        "regex": "",
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Insights / Event segmentation",
+  "uid": "peculiar-insights-segmentation",
+  "version": 1
+}

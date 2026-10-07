@@ -1,0 +1,48 @@
+{
+  "name": "peculiar-insights",
+  "version": "0.1.0",
+  "description": "Client SDK for Peculiar Insights: consented product analytics and crash reporting over gRPC-Web and gRPC",
+  "license": "MIT",
+  "author": "Peculiar Systems <contact@peculiar.systems>",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "./browser": {
+      "types": "./dist/browser/index.d.ts",
+      "default": "./dist/browser/index.js"
+    },
+    "./node": {
+      "types": "./dist/node/index.d.ts",
+      "default": "./dist/node/index.js"
+    }
+  },
+  "scripts": {
+    "codegen": "buf generate",
+    "build": "tsc -p tsconfig.build.json && cp -r src/gen dist/gen",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "lint": "oxlint -D all --deny-warnings --type-aware -A no-redeclare -A consistent-return -A one-var -A no-magic-numbers -A prefer-readonly-parameter-types -A no-undefined -A sort-imports -A sort-keys -A no-optional-chaining -A no-ternary -A no-nested-ternary -A no-rest-spread-properties -A no-async-await -A no-await-in-loop -A prefer-destructuring -A prefer-named-capture-group -A max-statements -A max-lines -A max-params -A max-nested-calls -A id-length -A no-array-reduce -A no-array-callback-reference -A default-case -A no-null -A new-cap -A import-style -A no-await-expression-member -A no-useless-undefined -A explicit-function-return-type -A explicit-member-accessibility -A promise-function-async -A consistent-indexed-object-style src",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.15.0",
+    "@connectrpc/connect": "^2.2.0",
+    "@connectrpc/connect-node": "^2.2.0",
+    "@connectrpc/connect-web": "^2.2.0"
+  },
+  "devDependencies": {
+    "@bufbuild/protoc-gen-es": "^2.15.0",
+    "@types/node": "^26.6.3",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
+    "oxlint-tsgolint": "^7.0.2003",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

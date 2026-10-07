@@ -1,0 +1,171 @@
+cabal-version:      3.0
+name:               peculiar-insights-server
+version:            0.1.0.0
+synopsis:           The ingest server: gRPC in, PostgreSQL out, Grafana reads the rest
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Web
+build-type:         Simple
+
+common lang
+    default-language: GHC2021
+    default-extensions:
+        DerivingStrategies
+        DerivingVia
+        DeriveAnyClass
+        GeneralizedNewtypeDeriving
+        LambdaCase
+        MultiWayIf
+        BlockArguments
+        ViewPatterns
+        PatternSynonyms
+        QuasiQuotes
+        ApplicativeDo
+        OverloadedStrings
+        OverloadedLabels
+        OverloadedRecordDot
+        DuplicateRecordFields
+        NoFieldSelectors
+        RecordWildCards
+        NamedFieldPuns
+        TypeFamilies
+        DataKinds
+        FunctionalDependencies
+        UndecidableInstances
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wmissing-export-lists
+        -Wmissing-home-modules
+        -Wmissing-deriving-strategies
+        -Wpartial-fields
+        -Wredundant-constraints
+        -Woperator-whitespace
+        -Wredundant-bang-patterns
+        -Wunused-type-patterns
+        -Wunused-packages
+
+library
+    import:           lang
+    hs-source-dirs:   src
+    exposed-modules:
+        Peculiar.Insights.Server.Admission
+        Peculiar.Insights.Server.Api
+        Peculiar.Insights.Server.Clock
+        Peculiar.Insights.Server.Config
+        Peculiar.Insights.Server.Db
+        Peculiar.Insights.Server.Db.Consent
+        Peculiar.Insights.Server.Db.Publish
+        Peculiar.Insights.Server.Db.Subject
+        Peculiar.Insights.Server.Db.Symbols
+        Peculiar.Insights.Server.Db.Types
+        Peculiar.Insights.Server.Env
+        Peculiar.Insights.Server.Grafana
+        Peculiar.Insights.Server.Housekeeping
+        Peculiar.Insights.Server.Journal
+        Peculiar.Insights.Server.Limiter
+        Peculiar.Insights.Server.Maintain
+        Peculiar.Insights.Server.Manage
+        Peculiar.Insights.Server.Metrics
+        Peculiar.Insights.Server.Migrate
+        Peculiar.Insights.Server.Projects
+        Peculiar.Insights.Server.Proto
+        Peculiar.Insights.Server.Run
+        Peculiar.Insights.Server.Schema
+        Peculiar.Insights.Server.Symbolicate
+        Peculiar.Insights.Server.Symbolicator
+        Peculiar.Insights.Server.SymbolStore
+        Peculiar.Insights.Server.Symbols
+        Peculiar.Insights.Server.Uploads
+    build-depends:
+        aeson,
+        async,
+        base >=4.17 && <5,
+        beam-core,
+        beam-postgres,
+        bytestring,
+        containers,
+        directory,
+        extra,
+        file-embed,
+        filepath,
+        http-client,
+        http-client-tls,
+        http-types,
+        jose,
+        lens-family,
+        peculiar-insights-core,
+        peculiar-insights-proto,
+        peculiar-rpc,
+        postgresql-simple,
+        process,
+        proto-lens,
+        proto-lens-protobuf-types,
+        resource-pool,
+        temporary,
+        text,
+        time,
+        uuid-types,
+        wai,
+        warp
+
+executable peculiar-insights-server
+    import:           lang
+    hs-source-dirs:   app
+    main-is:          Main.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    build-depends:
+        base,
+        peculiar-insights-server
+
+test-suite peculiar-insights-server-test
+    import:           lang
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    other-modules:
+        Test.Peculiar.Insights.Server.Analysis
+        Test.Peculiar.Insights.Server.Api
+        Test.Peculiar.Insights.Server.Dashboard
+        Test.Peculiar.Insights.Server.Dashboards
+        Test.Peculiar.Insights.Server.Db
+        Test.Peculiar.Insights.Server.Frames
+        Test.Peculiar.Insights.Server.Harness
+        Test.Peculiar.Insights.Server.Manage
+        Test.Peculiar.Insights.Server.Postgres
+        Test.Peculiar.Insights.Server.Regrouping
+        Test.Peculiar.Insights.Server.Requests
+        Test.Peculiar.Insights.Server.SymbolFixtures
+        Test.Peculiar.Insights.Server.Traces
+        Test.Peculiar.Insights.Server.Symbols
+    build-depends:
+        aeson,
+        async,
+        base,
+        bytestring,
+        containers,
+        deriving-aeson,
+        directory,
+        file-embed,
+        filepath,
+        hedgehog,
+        http-client,
+        http-types,
+        jose,
+        lens-family,
+        peculiar-insights-core,
+        peculiar-insights-proto,
+        peculiar-insights-server,
+        peculiar-rpc,
+        postgresql-simple,
+        process,
+        proto-lens,
+        temporary,
+        text,
+        time,
+        uuid-types,
+        warp

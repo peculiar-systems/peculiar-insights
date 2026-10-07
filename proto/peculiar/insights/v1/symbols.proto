@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package peculiar.insights.v1;
+
+service Symbols {
+  rpc Upload(stream UploadRequest) returns (UploadResponse);
+}
+
+enum SymbolKind {
+  SYMBOL_KIND_UNSPECIFIED = 0;
+  SYMBOL_KIND_DART_SYMBOLS = 1;
+  SYMBOL_KIND_WEB_SOURCE_MAPS = 2;
+  SYMBOL_KIND_R8_MAPPING = 3;
+  SYMBOL_KIND_NDK_SYMBOLS = 4;
+  SYMBOL_KIND_DSYMS = 5;
+}
+
+message UploadRequest {
+  oneof part {
+    UploadTarget target = 1;
+    SymbolFile file = 2;
+    bytes chunk = 3;
+  }
+}
+
+message UploadTarget {
+  string project = 1;
+  string build = 2;
+}
+
+message SymbolFile {
+  SymbolKind kind = 1;
+  string name = 2;
+}
+
+message UploadResponse {
+  repeated StoredKind kinds = 1;
+}
+
+message StoredKind {
+  SymbolKind kind = 1;
+  uint32 files = 2;
+}

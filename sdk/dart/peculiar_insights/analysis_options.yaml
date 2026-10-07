@@ -1,0 +1,8 @@
+include: package:ai_dart_linter/ai_dart_linter.yaml
+
+analyzer:
+  exclude:
+    - lib/gen/**
+    - "**/*.drift.dart"
+  errors:
+    included_file_warning: ignore

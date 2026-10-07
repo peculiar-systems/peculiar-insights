@@ -1,0 +1,120 @@
+cabal-version:      3.0
+name:               peculiar-insights-sdk
+version:            0.1.0.0
+synopsis:           The Haskell client for Peculiar Insights, for backend services
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Web
+build-type:         Simple
+
+common lang
+    default-language: GHC2021
+    default-extensions:
+        DerivingStrategies
+        DerivingVia
+        DeriveAnyClass
+        GeneralizedNewtypeDeriving
+        LambdaCase
+        MultiWayIf
+        BlockArguments
+        ViewPatterns
+        PatternSynonyms
+        QuasiQuotes
+        ApplicativeDo
+        OverloadedStrings
+        OverloadedLabels
+        OverloadedRecordDot
+        DuplicateRecordFields
+        NoFieldSelectors
+        RecordWildCards
+        NamedFieldPuns
+        TypeFamilies
+        DataKinds
+        FunctionalDependencies
+        UndecidableInstances
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wmissing-export-lists
+        -Wmissing-home-modules
+        -Wmissing-deriving-strategies
+        -Wpartial-fields
+        -Wredundant-constraints
+        -Woperator-whitespace
+        -Wredundant-bang-patterns
+        -Wunused-type-patterns
+        -Wunused-packages
+
+library
+    import:           lang
+    hs-source-dirs:   src
+    exposed-modules:
+        Peculiar.Insights.Sdk
+        Peculiar.Insights.Sdk.Batch
+        Peculiar.Insights.Sdk.Client
+        Peculiar.Insights.Sdk.Config
+        Peculiar.Insights.Sdk.Core
+        Peculiar.Insights.Sdk.Direct
+        Peculiar.Insights.Sdk.Encode
+        Peculiar.Insights.Sdk.Insights
+        Peculiar.Insights.Sdk.Properties
+        Peculiar.Insights.Sdk.Purge
+        Peculiar.Insights.Sdk.Spool
+        Peculiar.Insights.Sdk.Testing
+        Peculiar.Insights.Sdk.Tracker
+        Peculiar.Insights.Sdk.Types
+    build-depends:
+        async,
+        base >=4.17 && <5,
+        bytestring,
+        containers,
+        directory,
+        filepath,
+        lens-family,
+        peculiar-insights-proto,
+        peculiar-rpc,
+        proto-lens,
+        proto-lens-protobuf-types,
+        stm,
+        text,
+        time,
+        uuid
+
+executable peculiar-insights-example
+    import:           lang
+    hs-source-dirs:   example
+    main-is:          Main.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    build-depends:
+        base,
+        peculiar-insights-sdk,
+        text
+
+test-suite peculiar-insights-sdk-test
+    import:           lang
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    other-modules:
+        Delivery
+        Fixtures
+    build-depends:
+        async,
+        base,
+        bytestring,
+        containers,
+        filepath,
+        hedgehog,
+        lens-family,
+        peculiar-insights-proto,
+        peculiar-insights-sdk,
+        peculiar-rpc,
+        proto-lens,
+        stm,
+        temporary,
+        text,
+        time

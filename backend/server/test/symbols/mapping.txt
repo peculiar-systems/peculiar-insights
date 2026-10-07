@@ -1,0 +1,7 @@
+# compiler: R8
+# compiler_version: 8.5.35
+com.example.shop.Checkout -> a.a:
+    1:1:void <init>():10:10 -> <init>
+    2:4:void pay(int):20:22 -> a
+com.example.shop.Cart -> a.b:
+    1:3:void total():30:32 -> a

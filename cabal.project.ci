@@ -1,0 +1,16 @@
+import: cabal.project
+
+package peculiar-insights-core
+  ghc-options: -Werror
+
+package peculiar-insights-server
+  ghc-options: -Werror
+
+package peculiar-insights-inventory
+  ghc-options: -Werror
+
+package peculiar-insights-sdk
+  ghc-options: -Werror
+
+package peculiar-insights-upload
+  ghc-options: -Werror

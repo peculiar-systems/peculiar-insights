@@ -1,0 +1,91 @@
+cabal-version:      3.0
+name:               peculiar-insights-upload
+version:            0.1.0.0
+synopsis:           Uploads a build's symbols to a Peculiar Insights server
+license:            MIT
+license-file:       LICENSE
+author:             peculiar-systems
+maintainer:         326132264+peculiar-systems@users.noreply.github.com
+category:           Web
+build-type:         Simple
+
+common lang
+    default-language: GHC2021
+    default-extensions:
+        DerivingStrategies
+        DerivingVia
+        DeriveAnyClass
+        GeneralizedNewtypeDeriving
+        LambdaCase
+        MultiWayIf
+        BlockArguments
+        ViewPatterns
+        PatternSynonyms
+        QuasiQuotes
+        ApplicativeDo
+        OverloadedStrings
+        OverloadedLabels
+        OverloadedRecordDot
+        DuplicateRecordFields
+        NoFieldSelectors
+        RecordWildCards
+        NamedFieldPuns
+        TypeFamilies
+        DataKinds
+        FunctionalDependencies
+        UndecidableInstances
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wmissing-export-lists
+        -Wmissing-home-modules
+        -Wmissing-deriving-strategies
+        -Wpartial-fields
+        -Wredundant-constraints
+        -Woperator-whitespace
+        -Wredundant-bang-patterns
+        -Wunused-type-patterns
+        -Wunused-packages
+
+library
+    import:           lang
+    hs-source-dirs:   src
+    exposed-modules:
+        Peculiar.Insights.Upload
+        Peculiar.Insights.Upload.Options
+    build-depends:
+        base >=4.17 && <5,
+        bytestring,
+        directory,
+        filepath,
+        lens-family,
+        optparse-applicative,
+        peculiar-insights-core,
+        peculiar-insights-proto,
+        peculiar-rpc-client,
+        proto-lens,
+        text
+
+executable peculiar-insights-upload-symbols
+    import:           lang
+    hs-source-dirs:   app
+    main-is:          Main.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    build-depends:
+        base,
+        peculiar-insights-upload
+
+test-suite peculiar-insights-upload-test
+    import:           lang
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    build-depends:
+        base,
+        directory,
+        filepath,
+        hedgehog,
+        peculiar-insights-core,
+        peculiar-insights-upload,
+        temporary

@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package peculiar.insights.v1;
+
+service Manage {
+  rpc ResolveIssue(ResolveIssueRequest) returns (ResolveIssueResponse);
+  rpc IgnoreIssue(IgnoreIssueRequest) returns (IgnoreIssueResponse);
+  rpc ReopenIssue(ReopenIssueRequest) returns (ReopenIssueResponse);
+  rpc ErasePerson(ErasePersonRequest) returns (ErasePersonResponse);
+}
+
+message ResolveIssueRequest {
+  string project = 1;
+  string environment = 2;
+  int64 issue = 3;
+}
+
+message ResolveIssueResponse {}
+
+message IgnoreIssueRequest {
+  string project = 1;
+  string environment = 2;
+  int64 issue = 3;
+}
+
+message IgnoreIssueResponse {}
+
+message ReopenIssueRequest {
+  string project = 1;
+  string environment = 2;
+  int64 issue = 3;
+}
+
+message ReopenIssueResponse {}
+
+message ErasePersonRequest {
+  string project = 1;
+  string environment = 2;
+  string user_id = 3;
+}
+
+message ErasePersonResponse {}

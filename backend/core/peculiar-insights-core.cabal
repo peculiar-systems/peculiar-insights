@@ -1,0 +1,112 @@
+cabal-version:      3.0
+name:               peculiar-insights-core
+version:            0.1.0.0
+synopsis:           The pure model of analytics ingest, consent and crash grouping
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Web
+build-type:         Simple
+
+common lang
+    default-language: GHC2021
+    default-extensions:
+        DerivingStrategies
+        DerivingVia
+        DeriveAnyClass
+        GeneralizedNewtypeDeriving
+        LambdaCase
+        MultiWayIf
+        BlockArguments
+        ViewPatterns
+        PatternSynonyms
+        QuasiQuotes
+        ApplicativeDo
+        OverloadedStrings
+        OverloadedLabels
+        OverloadedRecordDot
+        DuplicateRecordFields
+        NoFieldSelectors
+        RecordWildCards
+        NamedFieldPuns
+        TypeFamilies
+        DataKinds
+        FunctionalDependencies
+        UndecidableInstances
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wmissing-export-lists
+        -Wmissing-home-modules
+        -Wmissing-deriving-strategies
+        -Wpartial-fields
+        -Wredundant-constraints
+        -Woperator-whitespace
+        -Wredundant-bang-patterns
+        -Wunused-type-patterns
+        -Wunused-packages
+
+library
+    import:           lang
+    hs-source-dirs:   src
+    exposed-modules:
+        Peculiar.Insights.Core.Analytics
+        Peculiar.Insights.Core.Cohort
+        Peculiar.Insights.Core.Config
+        Peculiar.Insights.Core.Consent
+        Peculiar.Insights.Core.Enum
+        Peculiar.Insights.Core.Fingerprint
+        Peculiar.Insights.Core.Ingest
+        Peculiar.Insights.Core.Issue
+        Peculiar.Insights.Core.Item
+        Peculiar.Insights.Core.Metrics
+        Peculiar.Insights.Core.Profile
+        Peculiar.Insights.Core.RateLimit
+        Peculiar.Insights.Core.Symbols
+        Peculiar.Insights.Core.Time
+        Peculiar.Insights.Core.Validate
+        Peculiar.Insights.Core.Value
+    build-depends:
+        aeson >=2.1 && <2.3,
+        base >=4.17 && <5,
+        base16-bytestring >=1.0 && <1.1,
+        containers >=0.6 && <0.8,
+        cryptohash-sha256 >=0.11 && <0.12,
+        deriving-aeson >=0.2 && <0.3,
+        optics-core >=0.4 && <0.5,
+        scientific >=0.3 && <0.4,
+        text >=2.0 && <2.2,
+        time >=1.12 && <1.15,
+        uuid-types >=1.0 && <1.1
+
+test-suite peculiar-insights-core-test
+    import:           lang
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    other-modules:
+        Test.Peculiar.Insights.Core.Analytics
+        Test.Peculiar.Insights.Core.Cohort
+        Test.Peculiar.Insights.Core.Fingerprint
+        Test.Peculiar.Insights.Core.Gen
+        Test.Peculiar.Insights.Core.Ingest
+        Test.Peculiar.Insights.Core.Issue
+        Test.Peculiar.Insights.Core.Metrics
+        Test.Peculiar.Insights.Core.Profile
+        Test.Peculiar.Insights.Core.RateLimit
+        Test.Peculiar.Insights.Core.Symbols
+        Test.Peculiar.Insights.Core.Time
+        Test.Peculiar.Insights.Core.Validate
+        Test.Peculiar.Insights.Core.Value
+    build-depends:
+        aeson,
+        base,
+        containers,
+        hedgehog,
+        optics-core,
+        peculiar-insights-core,
+        text,
+        time,
+        uuid-types

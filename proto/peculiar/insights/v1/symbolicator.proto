@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package peculiar.insights.v1;
+
+service Symbolicator {
+  rpc Inspect(InspectRequest) returns (InspectResponse);
+  rpc LookupNative(LookupNativeRequest) returns (LookupNativeResponse);
+  rpc Retrace(RetraceRequest) returns (RetraceResponse);
+  rpc MapSource(MapSourceRequest) returns (MapSourceResponse);
+}
+
+enum SymbolFormat {
+  SYMBOL_FORMAT_UNSPECIFIED = 0;
+  SYMBOL_FORMAT_NATIVE = 1;
+  SYMBOL_FORMAT_R8_MAPPING = 2;
+  SYMBOL_FORMAT_SOURCE_MAP = 3;
+}
+
+message InspectRequest {
+  string path = 1;
+  SymbolFormat format = 2;
+  string cache_directory = 3;
+}
+
+message InspectResponse {
+  repeated Indexed entries = 1;
+}
+
+message Indexed {
+  string identifier = 1;
+  string path = 2;
+}
+
+message LookupNativeRequest {
+  string path = 1;
+  repeated uint64 addresses = 2;
+}
+
+message LookupNativeResponse {
+  repeated Resolved resolved = 1;
+}
+
+message RetraceRequest {
+  string path = 1;
+  repeated JvmFrame frames = 2;
+}
+
+message JvmFrame {
+  string class_name = 1;
+  string method = 2;
+  string file = 3;
+  uint32 line = 4;
+}
+
+message RetraceResponse {
+  repeated Resolved resolved = 1;
+}
+
+message MapSourceRequest {
+  string path = 1;
+  repeated SourcePosition positions = 2;
+}
+
+message SourcePosition {
+  uint32 line = 1;
+  uint32 column = 2;
+}
+
+message MapSourceResponse {
+  repeated Resolved resolved = 1;
+}
+
+message Resolved {
+  repeated SourceFrame frames = 1;
+}
+
+message SourceFrame {
+  string module = 1;
+  string function = 2;
+  string file = 3;
+  uint32 line = 4;
+  uint32 column = 5;
+}

@@ -1,0 +1,1 @@
+packages: backend/core, backend/proto, backend/server, backend/upload, backend/inventory, sdk/haskell

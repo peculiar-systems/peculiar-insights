@@ -1,0 +1,502 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "description": "Unbounded retention: of the people who first did the birth event in a period, how many did the return event N periods later.",
+  "editable": true,
+  "graphTooltip": 1,
+  "links": [
+    {
+      "asDropdown": true,
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "peculiar-insights"
+      ],
+      "title": "Peculiar Insights",
+      "type": "dashboards"
+    }
+  ],
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "mode": "gradient",
+              "type": "color-background"
+            },
+            "filterable": false
+          },
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#cde2fb",
+                "value": null
+              },
+              {
+                "color": "#86b6ef",
+                "value": 20
+              },
+              {
+                "color": "#3987e5",
+                "value": 40
+              },
+              {
+                "color": "#1c5cab",
+                "value": 60
+              },
+              {
+                "color": "#0d366b",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cohort\\period"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "string"
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char(cohort, 'YYYY-MM-DD') AS cohort, period, retained_pct FROM (SELECT cohort, period, cohort_size, retained, round(100.0 * retained / NULLIF(cohort_size, 0), 1) AS retained_pct FROM reporting.retention('${project}', '${environment}', '${birth}', '${return}', '${period}', $__timeFrom(), $__timeTo(), ${periods}::integer)) AS r ORDER BY cohort, period",
+          "refId": "A"
+        }
+      ],
+      "title": "Retention by cohort (${period}s since birth, percent of cohort)",
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "period",
+            "emptyValue": "null",
+            "rowField": "cohort",
+            "valueField": "retained_pct"
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisSoftMin": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "lineWidth": 2,
+            "pointSize": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            }
+          },
+          "min": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cohort_size"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#2a78d6",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT cohort AS time, cohort_size FROM (SELECT cohort, period, cohort_size, retained, round(100.0 * retained / NULLIF(cohort_size, 0), 1) AS retained_pct FROM reporting.retention('${project}', '${environment}', '${birth}', '${return}', '${period}', $__timeFrom(), $__timeTo(), ${periods}::integer)) AS r WHERE period = 0 ORDER BY cohort",
+          "refId": "A"
+        }
+      ],
+      "title": "Cohort sizes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#eb6834",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisSoftMin": 0,
+            "lineWidth": 2,
+            "pointSize": {
+              "fixed": 8
+            },
+            "show": "points+lines"
+          },
+          "max": 100,
+          "min": 0,
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "mapping": "auto",
+        "series": [
+          {
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "period"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "retained_pct"
+              }
+            }
+          }
+        ],
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT period, round(100.0 * sum(retained) / NULLIF(sum(cohort_size), 0), 1) AS retained_pct FROM (SELECT cohort, period, cohort_size, retained, round(100.0 * retained / NULLIF(cohort_size, 0), 1) AS retained_pct FROM reporting.retention('${project}', '${environment}', '${birth}', '${return}', '${period}', $__timeFrom(), $__timeTo(), ${periods}::integer)) AS r GROUP BY period ORDER BY period",
+          "refId": "A"
+        }
+      ],
+      "title": "Average retention curve",
+      "type": "xychart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "peculiar-insights"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "peculiar-insights"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (SELECT cohort, period, cohort_size, retained, round(100.0 * retained / NULLIF(cohort_size, 0), 1) AS retained_pct FROM reporting.retention('${project}', '${environment}', '${birth}', '${return}', '${period}', $__timeFrom(), $__timeTo(), ${periods}::integer)) AS r ORDER BY cohort, period",
+          "refId": "A"
+        }
+      ],
+      "title": "Raw retention rows",
+      "type": "table"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [
+    "peculiar-insights"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "peculiar-insights"
+        },
+        "definition": "SELECT DISTINCT project FROM reporting.device ORDER BY 1",
+        "description": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Project",
+        "multi": false,
+        "name": "project",
+        "options": [],
+        "query": "SELECT DISTINCT project FROM reporting.device ORDER BY 1",
+        "refresh": 2,
+        "regex": "",
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "peculiar-insights"
+        },
+        "definition": "SELECT DISTINCT environment FROM reporting.device WHERE project = '${project}' ORDER BY 1",
+        "description": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Environment",
+        "multi": false,
+        "name": "environment",
+        "options": [],
+        "query": "SELECT DISTINCT environment FROM reporting.device WHERE project = '${project}' ORDER BY 1",
+        "refresh": 2,
+        "regex": "",
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "peculiar-insights"
+        },
+        "definition": "SELECT DISTINCT name FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' ORDER BY 1",
+        "description": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Birth event",
+        "multi": false,
+        "name": "birth",
+        "options": [],
+        "query": "SELECT DISTINCT name FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' ORDER BY 1",
+        "refresh": 2,
+        "regex": "",
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "peculiar-insights"
+        },
+        "definition": "SELECT DISTINCT name FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' ORDER BY 1",
+        "description": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Return event",
+        "multi": false,
+        "name": "return",
+        "options": [],
+        "query": "SELECT DISTINCT name FROM reporting.event WHERE project = '${project}' AND environment = '${environment}' ORDER BY 1",
+        "refresh": 2,
+        "regex": "",
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "week",
+          "value": "week"
+        },
+        "description": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Period",
+        "multi": false,
+        "name": "period",
+        "options": [
+          {
+            "selected": true,
+            "text": "week",
+            "value": "week"
+          },
+          {
+            "selected": false,
+            "text": "day",
+            "value": "day"
+          },
+          {
+            "selected": false,
+            "text": "month",
+            "value": "month"
+          }
+        ],
+        "query": "week,day,month",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "12",
+          "value": "12"
+        },
+        "description": "How many periods after the birth period to show",
+        "hide": 0,
+        "label": "Periods",
+        "name": "periods",
+        "options": [
+          {
+            "selected": true,
+            "text": "12",
+            "value": "12"
+          }
+        ],
+        "query": "12",
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-90d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Insights / Retention",
+  "uid": "peculiar-insights-retention",
+  "version": 1
+}

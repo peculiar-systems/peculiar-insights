@@ -1,0 +1,31 @@
+cabal-version:      3.0
+name:               peculiar-insights-proto
+version:            0.1.0.0
+synopsis:           The generated proto-lens code for the peculiar.insights.v1 contract
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Web
+build-type:         Simple
+
+library
+    hs-source-dirs:   gen
+    default-language: GHC2021
+    exposed-modules:
+        Proto.Peculiar.Insights.V1.Common
+        Proto.Peculiar.Insights.V1.Common_Fields
+        Proto.Peculiar.Insights.V1.Ingest
+        Proto.Peculiar.Insights.V1.Ingest_Fields
+        Proto.Peculiar.Insights.V1.Manage
+        Proto.Peculiar.Insights.V1.Manage_Fields
+        Proto.Peculiar.Insights.V1.Options
+        Proto.Peculiar.Insights.V1.Options_Fields
+        Proto.Peculiar.Insights.V1.Symbolicator
+        Proto.Peculiar.Insights.V1.Symbolicator_Fields
+        Proto.Peculiar.Insights.V1.Symbols
+        Proto.Peculiar.Insights.V1.Symbols_Fields
+    build-depends:
+        base >=4.17 && <5,
+        proto-lens-runtime,
+        proto-lens-protobuf-types

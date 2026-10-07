@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package peculiar.insights.v1;
+
+import "google/protobuf/descriptor.proto";
+
+enum DataCategory {
+  DATA_CATEGORY_UNSPECIFIED = 0;
+  DATA_CATEGORY_NONE = 1;
+  DATA_CATEGORY_DEVICE_ID = 2;
+  DATA_CATEGORY_USER_ID = 3;
+  DATA_CATEGORY_DEVICE_INFO = 4;
+  DATA_CATEGORY_PRODUCT_INTERACTION = 5;
+  DATA_CATEGORY_CRASH_DATA = 6;
+  DATA_CATEGORY_OTHER_DIAGNOSTIC = 7;
+  DATA_CATEGORY_USER_CONTENT = 8;
+}
+
+enum Purpose {
+  PURPOSE_UNSPECIFIED = 0;
+  PURPOSE_ANALYTICS = 1;
+  PURPOSE_DIAGNOSTICS = 2;
+}
+
+extend google.protobuf.FieldOptions {
+  DataCategory category = 50101;
+  Purpose purpose = 50102;
+}

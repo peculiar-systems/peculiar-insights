@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package peculiar.insights.v1;
+
+import "google/protobuf/timestamp.proto";
+import "peculiar/insights/v1/options.proto";
+
+message Value {
+  oneof kind {
+    string string_value = 1;
+    int64 int_value = 2;
+    double double_value = 3;
+    bool bool_value = 4;
+    google.protobuf.Timestamp time_value = 5;
+    ValueList list_value = 6;
+    ValueMap map_value = 7;
+  }
+}
+
+message ValueList {
+  repeated Value values = 1;
+}
+
+message ValueMap {
+  map<string, Value> entries = 1;
+}
+
+enum Platform {
+  PLATFORM_UNSPECIFIED = 0;
+  PLATFORM_IOS = 1;
+  PLATFORM_ANDROID = 2;
+  PLATFORM_MACOS = 3;
+  PLATFORM_WINDOWS = 4;
+  PLATFORM_LINUX = 5;
+  PLATFORM_WEB = 6;
+  PLATFORM_SERVER = 7;
+}
+
+message Context {
+  string sdk_name = 1 [(category) = DATA_CATEGORY_NONE];
+  string sdk_version = 2 [(category) = DATA_CATEGORY_NONE];
+  string app_version = 3 [(category) = DATA_CATEGORY_NONE];
+  string app_build = 4 [(category) = DATA_CATEGORY_NONE];
+  Platform platform = 5 [(category) = DATA_CATEGORY_DEVICE_INFO];
+  string os_name = 6 [(category) = DATA_CATEGORY_DEVICE_INFO];
+  string os_version = 7 [(category) = DATA_CATEGORY_DEVICE_INFO];
+  string device_model = 8 [(category) = DATA_CATEGORY_DEVICE_INFO];
+  string locale = 9 [(category) = DATA_CATEGORY_DEVICE_INFO];
+  string timezone = 10 [(category) = DATA_CATEGORY_DEVICE_INFO];
+  uint32 screen_width = 11 [(category) = DATA_CATEGORY_DEVICE_INFO];
+  uint32 screen_height = 12 [(category) = DATA_CATEGORY_DEVICE_INFO];
+}
+
+enum ConsentState {
+  CONSENT_STATE_UNSPECIFIED = 0;
+  CONSENT_STATE_GRANTED = 1;
+  CONSENT_STATE_WITHDRAWN = 2;
+}
+
+message PurposeState {
+  Purpose purpose = 1;
+  ConsentState state = 2;
+  string policy_version = 3;
+}
+
+message ConsentSnapshot {
+  repeated PurposeState purposes = 1;
+}

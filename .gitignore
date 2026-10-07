@@ -1,0 +1,12 @@
+dist-newstyle/
+result
+result-*
+.direnv/
+gen/
+node_modules/
+dist/
+.dart_tool/
+build/
+pubspec.lock
+!pubspec.lock.json
+target/

@@ -1,0 +1,90 @@
+cabal-version:      3.0
+name:               peculiar-insights-inventory
+version:            0.1.0.0
+synopsis:           The data inventory and Apple privacy manifest, generated from the proto annotations
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Web
+build-type:         Simple
+
+common lang
+    default-language: GHC2021
+    default-extensions:
+        DerivingStrategies
+        DerivingVia
+        DeriveAnyClass
+        GeneralizedNewtypeDeriving
+        LambdaCase
+        MultiWayIf
+        BlockArguments
+        ViewPatterns
+        PatternSynonyms
+        QuasiQuotes
+        ApplicativeDo
+        OverloadedStrings
+        OverloadedLabels
+        OverloadedRecordDot
+        DuplicateRecordFields
+        NoFieldSelectors
+        RecordWildCards
+        NamedFieldPuns
+        TypeFamilies
+        DataKinds
+        FunctionalDependencies
+        UndecidableInstances
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wmissing-export-lists
+        -Wmissing-home-modules
+        -Wmissing-deriving-strategies
+        -Wpartial-fields
+        -Wredundant-constraints
+        -Woperator-whitespace
+        -Wredundant-bang-patterns
+        -Wunused-type-patterns
+        -Wunused-packages
+
+library
+    import:           lang
+    hs-source-dirs:   src
+    exposed-modules:
+        Peculiar.Insights.Inventory
+    build-depends:
+        aeson,
+        base >=4.17 && <5,
+        bytestring,
+        containers,
+        deriving-aeson,
+        lens-family,
+        proto-lens,
+        proto-lens-protobuf-types,
+        text
+
+executable peculiar-insights-inventory
+    import:           lang
+    hs-source-dirs:   app
+    main-is:          Main.hs
+    build-depends:
+        aeson,
+        base,
+        bytestring,
+        peculiar-insights-inventory,
+        text
+
+test-suite peculiar-insights-inventory-test
+    import:           lang
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    build-depends:
+        base,
+        hedgehog,
+        lens-family,
+        peculiar-insights-inventory,
+        proto-lens,
+        proto-lens-protobuf-types,
+        text
