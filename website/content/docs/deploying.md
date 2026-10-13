@@ -136,12 +136,12 @@ The view appears as `reporting.cohort_<slug>_<environment>_<name>` and the segme
 
 ## Listening
 
-| Option               | Default     | Meaning                                                                                                         |
-| -------------------- | ----------- | --------------------------------------------------------------------------------------------------------------- |
-| `listen.host`        | `127.0.0.1` | Address to bind.                                                                                                |
-| `listen.port`        | `50051`     | One port for gRPC, gRPC-Web and Connect.                                                                        |
-| `listen.corsOrigins` | `[ ]`       | Browser origins allowed to call the server; empty allows any origin.                                            |
-| `listen.tls`         | `null`      | `{ certificate, key }` paths to serve TLS directly, chosen by ALPN. Otherwise terminate TLS at a reverse proxy. |
+| Option               | Default     | Meaning                                                                                                                         |
+| -------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `listen.host`        | `127.0.0.1` | Address to bind.                                                                                                                |
+| `listen.port`        | `50051`     | One port for gRPC, gRPC-Web and Connect.                                                                                        |
+| `listen.corsOrigins` | `[ ]`       | Browser origins allowed to call the server, each exact or `https://*.example.org` for every subdomain; empty allows any origin. |
+| `listen.tls`         | `null`      | `{ certificate, key }` paths to serve TLS directly, chosen by ALPN. Otherwise terminate TLS at a reverse proxy.                 |
 
 ## Rate limits
 

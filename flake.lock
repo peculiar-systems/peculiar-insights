@@ -146,11 +146,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791395984,
-        "narHash": "sha256-eFWnyHgAKDSJE96+NGhw4nesuZscC64TLcngPBT3pAA=",
+        "lastModified": 1791920932,
+        "narHash": "sha256-7th8uoBIa7Z8C3xtCScryWj6wK3r2wAL4ueo0HlOHqA=",
         "owner": "peculiar-systems",
         "repo": "peculiar-rpc",
-        "rev": "ab0e146feb47e1c862fb72302926262da46a3698",
+        "rev": "3d97ed411f7569f8540910ba011b05c9301ae17b",
         "type": "github"
       },
       "original": {

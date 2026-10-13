@@ -683,7 +683,7 @@ in
       corsOrigins = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description = "Browser origins allowed to call the server; empty allows any origin";
+        description = "Browser origins allowed to call the server, each exact or `https://*.example.org` for every subdomain; empty allows any origin";
       };
       tls = mkOption {
         type = types.nullOr (
